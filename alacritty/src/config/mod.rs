@@ -412,6 +412,19 @@ mod tests {
         toml::from_str::<UiConfig>("").unwrap();
     }
 
+    #[test]
+    fn toggle_history_mode_binding_parses() {
+        toml::from_str::<UiConfig>(
+            r#"
+            [[keyboard.bindings]]
+            key = "H"
+            mods = "Control|Shift"
+            action = "ToggleHistoryMode"
+            "#,
+        )
+        .unwrap();
+    }
+
     fn yaml_to_toml(contents: &str) -> String {
         let mut value: serde_yaml::Value = serde_yaml::from_str(contents).unwrap();
         prune_yaml_nulls(&mut value, false);

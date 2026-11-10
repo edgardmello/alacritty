@@ -232,6 +232,12 @@ pub enum Action {
     /// Toggle simple fullscreen on macOS.
     ToggleSimpleFullscreen,
 
+    /// Toggle between global and per-directory shell history.
+    ///
+    /// Sends the CSI sequence `ESC [ 9000 ~` to the terminal; pairs with the
+    /// zsh integration shipped in extra/zsh/alacritty-histmode.zsh.
+    ToggleHistoryMode,
+
     /// Clear active selection.
     ClearSelection,
 
@@ -434,6 +440,10 @@ pub fn default_key_bindings() -> Vec<KeyBinding> {
         Copy,  +BindingMode::VI; Action::ClearSelection;
         Paste, ~BindingMode::VI; Action::Paste;
         Paste, +BindingMode::VI, +BindingMode::SEARCH; Action::Paste;
+        // Fork: toggle global/per-directory shell history (zsh integration required).
+        "h",       ModifiersState::CONTROL | ModifiersState::SHIFT,
+                   ~BindingMode::DISAMBIGUATE_ESC_CODES, ~BindingMode::REPORT_ALL_KEYS_AS_ESC;
+                   Action::ToggleHistoryMode;
         "l",       ModifiersState::CONTROL; Action::ClearLogNotice;
         "l",       ModifiersState::CONTROL; Action::ReceiveChar;
         Home,      ModifiersState::SHIFT, ~BindingMode::ALT_SCREEN; Action::ScrollToTop;
@@ -1281,6 +1291,21 @@ mod tests {
 
         assert!(binding.triggers_match(&different_action));
         assert!(different_action.triggers_match(&binding));
+    }
+
+    #[test]
+    fn toggle_history_mode_default_binding() {
+        let bindings = default_key_bindings();
+        let binding = bindings
+            .iter()
+            .find(|binding| matches!(binding.action, Action::ToggleHistoryMode))
+            .expect("ToggleHistoryMode is bound by default");
+
+        assert_eq!(binding.mods, ModifiersState::CONTROL | ModifiersState::SHIFT);
+        match &binding.trigger {
+            BindingKey::Keycode { key: Key::Character(key), .. } => assert_eq!(key.as_str(), "h"),
+            trigger => panic!("unexpected trigger: {trigger:?}"),
+        }
     }
 
     #[test]

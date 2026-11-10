@@ -170,6 +170,7 @@ impl<T: EventListener> Execute<T> for Action {
     fn execute<A: ActionContext<T>>(&self, ctx: &mut A) {
         match self {
             Action::Esc(s) => ctx.paste(s, false),
+            Action::ToggleHistoryMode => ctx.paste("\x1b[9000~", false),
             Action::Command(program) => ctx.spawn_daemon(program.program(), program.args()),
             Action::Hint(hint) => {
                 ctx.display().hint_state.start(hint.clone());

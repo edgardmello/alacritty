@@ -849,6 +849,11 @@ _https://docs.rs/winit/latest/winit/keyboard/enum.Key.html#variant.Dead_
 			Clear active selection.
 		*ToggleViMode*
 			Toggle vi mode.
+		*ToggleHistoryMode*
+			Toggle between global and per-directory shell history. Sends the
+			CSI sequence ESC [ 9000 ~ to the terminal; requires the zsh
+			integration shipped in extra/zsh/alacritty-histmode.zsh. Bound to
+			Control+Shift+H by default.
 		*SearchForward*
 			Start a forward buffer search.
 		*SearchBackward*

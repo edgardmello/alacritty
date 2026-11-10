@@ -10,6 +10,12 @@ Notable changes to the `alacritty_terminal` crate are documented in its
 
 ## 0.18.0-dev
 
+### Added
+
+- Fork: `ToggleHistoryMode` key binding action (bound to `Control+Shift+H` by
+  default) and zsh integration (`extra/zsh/alacritty-histmode.zsh`) providing
+  global and per-directory shell history switchable with a keyboard shortcut
+
 ### Packaging
 
 - Fixed `alacritty-escapes(7)` manpage missing from macOS install
